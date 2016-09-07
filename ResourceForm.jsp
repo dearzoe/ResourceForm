@@ -54,8 +54,10 @@
     </tr>
 </table>
 <script type="text/javascript">
-    var resId;  // 资源id  
-    var resClsId = 'DF7013366ECCB153161F6492222EC0AE';  // 资源类id
+    // 资源id
+    var resId;
+    // 资源类id
+    var resClsId = 'DF7013366ECCB153161F6492222EC0AE';
     $(function () {
         resId = eaf.getUrlParam('id');
         // 资源对象
@@ -135,12 +137,17 @@
             $('#EAF_SN').textbox('setValue', resobj.EAF_SN);
         }
     });
-    //保存资源   
+    //保存资源
     function getResult() {
-        var resFormObj = {};
+    //类元模型ID
+    var clsId=eaf.getUrlParam('clsid');
+        //表单对象
+    debugger;//1
+    var resFormObj = {};
         resFormObj.EAF_ID = resId;
         resFormObj.EAF_RELATECLSID = $('#EAF_RELATECLSID').combotree('getValue');
         if (resFormObj.EAF_RELATECLSID) {
+            resFormObj.EAF_RESOURCEID=$('#dgd_Attrs').datagrid('getChecked')[0].EAF_RESOURCEID;
             resFormObj.EAF_RELATEATTRID = $('#EAF_RELATEATTRID').combotree('getValue');
             resFormObj.EAF_FILTER = eaf.escapejsonstr($('#EAF_FILTER').val());
             resFormObj.EAF_RELATEVALUE = $('#EAF_RELATEVALUE').val();
@@ -160,19 +167,15 @@
             resFormObj.EAF_DISPLAYATTRS = resFormObj.EAF_DISPLAYATTRS + ']';
             resFormObj.EAF_DISPLAYATTRS = eaf.escapejsonstr(resFormObj.EAF_DISPLAYATTRS);
             // 参数
-            var data = {
-                classId: resClsId,
-                insertObjects: '[]',
-                updateObjects: '[' + eaf.jsonToStr(resFormObj) + ']',
-                deleteObjects: '[]'
-            };
-            eaf.saveData('ObjectService', 'SaveObjects', data, '');
+            var updateObjects =  eaf.jsonToStr(resFormObj) ;
+            eaf.getIframWin(top.window.frames["ifmbimcenter"].document.getElementById(""+clsId)).updateObjects.push(updateObjects);
+            updateObjects=[];
         }
         else {
-            var deleteObjects = '["' + resId + '"]';
-            eaf.saveObjects(resClsId, [], [], deleteObjects, function (arg) {
-                alert("保存成功");
-            });
+            //删除对象
+            var deleteObjects =  resId ;
+            eaf.getIframWin(top.window.frames["ifmbimcenter"].document.getElementById(""+clsId)).deleteObjects.push(deleteObjects);
+            deleteObjects=[];
         }
         return resId;
     };
