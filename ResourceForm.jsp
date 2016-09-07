@@ -54,8 +54,6 @@
     </tr>
 </table>
 <script type="text/javascript">
-    var bb = "aa";
-    alert(parent.abc);
     var resId;  // 资源id  
     var resClsId = 'DF7013366ECCB153161F6492222EC0AE';  // 资源类id
     $(function () {
@@ -69,7 +67,6 @@
         $('#EAF_RELATECLSID').combotree({
             url: eaf.getComboTreeAllByClsUrl('51D9A19482AFE43B895AEA9BA76CEFCD'), //类元模型ID
             onChange: function (newValue, oldValue) {
-    debugger;//1
                 var cid = newValue;
                 if (!cid) { cid = resobj.EAF_RELATECLSID; }
                 if (cid) {
@@ -140,12 +137,10 @@
     });
     //保存资源   
     function getResult() {
-        debugger;//1
         var resFormObj = {};
         resFormObj.EAF_ID = resId;
         resFormObj.EAF_RELATECLSID = $('#EAF_RELATECLSID').combotree('getValue');
         if (resFormObj.EAF_RELATECLSID) {
-            resFormObj.EAF_RESOURCEID=$('#dgd_Attrs').datagrid('getChecked').EAF_RESOURCEID;
             resFormObj.EAF_RELATEATTRID = $('#EAF_RELATEATTRID').combotree('getValue');
             resFormObj.EAF_FILTER = eaf.escapejsonstr($('#EAF_FILTER').val());
             resFormObj.EAF_RELATEVALUE = $('#EAF_RELATEVALUE').val();
@@ -175,7 +170,7 @@
         }
         else {
             var deleteObjects = '["' + resId + '"]';
-             eaf.saveObjects(resClsId, [], [], deleteObjects, function (arg) {
+            eaf.saveObjects(resClsId, [], [], deleteObjects, function (arg) {
                 alert("保存成功");
             });
         }

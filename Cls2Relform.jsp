@@ -89,25 +89,14 @@
         });
     }
     //保存表单数据
-    var abc="huwenzhe";
     function uie_frm_save() {
-    var data=eaf.getIframWin(window.frames["uie_ifm_rel"]).data;
-    var deleteObjects=eaf.getIframWin(window.frames["uie_ifm_rel"]).deleteObjects;
-    if(data){
-         eaf.saveData('ObjectService', 'SaveObjects', data, '');
-    }else{
-         eaf.saveObjects(resClsId, [], [], deleteObjects, function (arg) {
-         alert("保存成功");
-         });
-    }
-    debugger;//2
-		top.overrideAttrs=window.frames["uie_ifm_rel"].getSaveJson();
+		top.overrideAttrs=window.frames["uie_ifm_rel"].getSaveJson(); 
 		// 是否存在被覆盖的属性
     	var isExistAttrOverride=eaf.readData('DataModel', 'IsExistAttrOverride',{'clsId':objid});     	
 		if(isExistAttrOverride.isExistAttrOverride=="1"&&(eaf.strToJson(top.overrideAttrs.updateObjects).length>0)){ 		
        		//选择要传递的属性窗口
    	    	ctl.openDialog("main/DataModel/AttrSynchronize.jsp", "属性传递", true,function(v){
-   	    		var cacheData=window.frames["uie_ifm_rel"].dataCache;
+   	    		var cacheData=window.frames["uie_ifm_rel"].dataCache
    	    		// 过滤未修改的元属性
    	    		eaf.getChangeAttrs(cacheData,v,'EAF_ID',['EAF_ID','EAF_CLASSID','EAF_PATTRID','EAF_CNAME','IsOverride']);
    	    		uie_frm_save2(eaf.jsonToStr(v))
@@ -118,7 +107,6 @@
     }
   	//保存表单数据
     function uie_frm_save2(r){
-    debugger;//2
     	if (!divform.form('validate')) {
             return;
         }
