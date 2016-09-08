@@ -12,47 +12,55 @@
 <script type="text/javascript">
     // 资源类id
     var resClsId = 'DF7013366ECCB153161F6492222EC0AE';
-    // 添加对象列表
+    // 添加对象列表  由保存资源页面传递来； 对象数组分为两层，第一层为对象，第二层为键值对，包括键为EAF_ID，EAF_RELATEATTRID，EAF_RELATECLSID等；
     var insertObjects = [];
-    // 修改对象列表
+    // 修改对象列表  由保存资源页面传递来； 对象数组分为两层，第一层为对象，第二层为键值对，包括键为EAF_ID，EAF_RELATEATTRID，EAF_RELATECLSID等；
     var updateObjects = [];
-    // 删除对象列表
+    // 删除对象列表  由保存资源页面传递来； 为字符串数组，每个字符串为删除行的resId
     var deleteObjects = [];
     // 类ID
-    var clsid = eaf.getUrlParam('clsid');
+    var clsId = eaf.getUrlParam('clsid');
     // 表单界面id
-    var uiid = eaf.getUrlParam('uiid');
+    var uiId = eaf.getUrlParam('uiid');
     // 对象ID
-    var objid = eaf.getUrlParam('objid');
+    var objId = eaf.getUrlParam('objid');
+    // div form表单
     var divform = $('#uie_div_form');
     var eafform;
     $(function () {
+        //创建参数对象
         var param = {};
-        param.groups = ctl.getAttrGroupByCls(clsid); //获取属性组
-        param.attrs = ctl.getAttrExByCls(clsid); //获取属性
-        param.tools = ctl.getFormOpersByCls(clsid, uiid); //获取操作 
+        //获取属性组
+        param.groups = ctl.getAttrGroupByCls(clsId);
+        //获取属性
+        param.attrs = ctl.getAttrExByCls(clsId);
+        //获取操作
+        param.tools = ctl.getFormOpersByCls(clsId, uiId);
         for (var i = 0; i < param.tools.length; i++) {
             if (param.tools[i].EAF_ID == "C8D374979B252F9E9D0EF19500DE05CB")
-                param.tools[i].EAF_EVENT = "uie_frm_clsui()";//	"CLSUI:01CA6C0A56BD451DA50806E617C5E347,B77C8CD23AE4EF5DBBD243579F82C9A9,id=[objid]"
+                param.tools[i].EAF_EVENT = "uie_frm_clsui()";
             if (param.tools[i].EAF_ID == "93BA2A79E810E59E8F48738B2AC709B7")
-                param.tools[i].EAF_EVENT = "uie_frm_clsoper()";//	"CLSUI:01CA6C0A56BD451DA50806E617C5E347,B77C8CD23AE4EF5DBBD243579F82C9A9,id=[objid]"
+                param.tools[i].EAF_EVENT = "uie_frm_clsoper()";
         }
-        var fromobj = ctl.getObjDefaultById(objid, clsid, param.attrs); //获取单个对象（包括默认值）
-        var frompclsid = ""; //添加情况下，父类ID
-        if (!fromobj.EAF_TYPE) {//如果类型为空，表示是类，要隐藏的关联相关列
+        //获取单个对象（包括默认值）
+        var fromobj = ctl.getObjDefaultById(objId, clsId, param.attrs);
+        //添加情况下，父类ID
+        var fromPClsId = "";
+        //如果类型为空，表示是类，要隐藏的关联相关列
+        if (!fromobj.EAF_TYPE) {
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_TYPE").EAF_FORMSHOW = 'N';
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_LEFTCLASSID").EAF_FORMSHOW = 'N';
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_LEFTCLASSNAME").EAF_FORMSHOW = 'N';
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_RIGHTCLASSID").EAF_FORMSHOW = 'N';
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_RIGHTCLASSNAME").EAF_FORMSHOW = 'N';
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_RELTYPE").EAF_FORMSHOW = 'N';
-            if (!fromobj.EAF_NAME) { frompclsid = fromobj.EAF_PID; } //添加
+            if (!fromobj.EAF_NAME) { fromPClsId = fromobj.EAF_PID; } //添加
         }
         else {
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_PERSIST").EAF_FORMSHOW = 'N';
             eaf.findArray(param.attrs, "EAF_CNAME", "EAF_VERSIONTYPE").EAF_FORMSHOW = 'N';
-            if (!fromobj.EAF_NAME) { frompclsid = '1F31E3CDC454FF32CCCE6EACC4E7EBFE'; } //关联暂时默认不继承  //添加
-            if (objid == '1F31E3CDC454FF32CCCE6EACC4E7EBFE') {
+            if (!fromobj.EAF_NAME) { fromPClsId = '1F31E3CDC454FF32CCCE6EACC4E7EBFE'; } //关联暂时默认不继承             //添加
+            if (objId == '1F31E3CDC454FF32CCCE6EACC4E7EBFE') {
                 eaf.findArray(param.attrs, "EAF_CNAME", "EAF_LEFTCLASSID").EAF_FORMSHOW = 'N';
                 eaf.findArray(param.attrs, "EAF_CNAME", "EAF_LEFTCLASSNAME").EAF_FORMSHOW = 'N';
                 eaf.findArray(param.attrs, "EAF_CNAME", "EAF_RIGHTCLASSID").EAF_FORMSHOW = 'N';
@@ -66,53 +74,53 @@
         eaf_id.EAF_FORMSHOW = 'Y';
         eaf_id.EAF_NOEDIT='Y';
         eaf_id.EAF_CTLTYPE='noedit';
-        eafform = new eaf_form(divform, param, clsid, objid, fromobj);
+        eafform = new eaf_form(divform, param, clsId, objId, fromobj);
         //设置属性列表
-        var relurl = 'Cls2RelAttr.jsp?uiid=8E484453AC6F6ABE08678490ACEA397E&clsid=DD9D7BCD45E2B002B64D372A04F31798&fromclsid=' + objid + '&frompclsid=' + frompclsid;
-        window.frames["uie_ifm_rel"].location.href = relurl;
+        var relUrl = 'Cls2RelAttr.jsp?uiid=8E484453AC6F6ABE08678490ACEA397E&clsid=DD9D7BCD45E2B002B64D372A04F31798&fromclsid=' + objId + '&frompclsid=' + fromPClsId;
+        window.frames["uie_ifm_rel"].location.href = relUrl;
         //父类有版本，子类和父类一致   
-        var pfromobj = eaf.getObjById(fromobj.EAF_PID, clsid); //获取父对象
-        if (pfromobj.EAF_VERSIONTYPE != '0') {
-            $("#EAF_VERSIONTYPE").combobox('setValue', pfromobj.EAF_VERSIONTYPE);
+        var pFromObj = eaf.getObjById(fromobj.EAF_PID, clsId); //获取父对象
+        if (pFromObj.EAF_VERSIONTYPE != '0') {
+            $("#EAF_VERSIONTYPE").combobox('setValue', pFromObj.EAF_VERSIONTYPE);
             $("#EAF_VERSIONTYPE").combobox('disable');
         }
         //父类是否多语言，子类和父类一直
-        if (pfromobj.EAF_MUL== '1') {
-            $("#EAF_MUL").combobox('setValue', pfromobj.EAF_MUL);
+        if (pFromObj.EAF_MUL== '1') {
+            $("#EAF_MUL").combobox('setValue', pFromObj.EAF_MUL);
             $("#EAF_MUL").combobox('disable');
         }
-        //
         var EAF_LEFTCLASSID = eaf.getUrlParam('EAF_LEFTCLASSID');
         if (EAF_LEFTCLASSID == "(EAF_ID)" && !(fromobj && fromobj.EAF_LEFTCLASSID != "(EAF_ID)")) {
             $("#EAF_LEFTCLASSID").combobox('clear');
         }
-        if (frompclsid=="(EAF_ID)") {  eaf.msg("请先选择父类。"); }
+        if (fromPClsId=="(EAF_ID)") {  eaf.msg("请先选择父类。"); }
     });
     //删除当前类
     function uie_frm_delete() {
         $.messager.confirm('确认对话框', '您确定要删除这个类吗？', function (r) {
             if (r) {
-                var rs = eaf.readData("DataModel", "DeleteClass", { clsid: objid });
+                var rs = eaf.readData("DataModel", "DeleteClass", { clsId: objId });
                 if (rs.EAF_ERROR) {
                     eaf.msg(rs.EAF_ERROR);
                     return;
                 }
                 //更新页面数据
                 var ifmtree = parent.frames["ifm8A0553ADAE0DEFB9299263A63E463655"];
-                eaf.getIframWin(ifmtree).eaftree.reload(objid);
+                eaf.getIframWin(ifmtree).eaftree.reload(objId);
                 parent.closeSelTab();
             }
         });
     }
     //保存表单数据
     function uie_frm_save() {
+    debugger;//1
        eaf.saveObjects(resClsId , insertObjects ,  updateObjects , eaf.jsonToStr(deleteObjects));
        insertObjects=[];
        updateObjects=[];
        deleteObjects=[];
 		top.overrideAttrs=window.frames["uie_ifm_rel"].getSaveJson(); 
 		// 是否存在被覆盖的属性
-    	var isExistAttrOverride=eaf.readData('DataModel', 'IsExistAttrOverride',{'clsId':objid});     	
+    	var isExistAttrOverride=eaf.readData('DataModel', 'IsExistAttrOverride',{'clsId':objId});
 		if(isExistAttrOverride.isExistAttrOverride=="1"&&(eaf.strToJson(top.overrideAttrs.updateObjects).length>0)){		
        		//选择要传递的属性窗口
    	    	ctl.openDialog("main/DataModel/AttrSynchronize.jsp", "属性传递", true,function(v){
@@ -135,7 +143,7 @@
         var gridJson = top.overrideAttrs;
         // 组织参数
         var data = {
-            clsid: objid,
+            clsId: objId,
             classObj: formJson,
             insertAttrs: gridJson.insertObjects,
             updateAttrs: r,
@@ -151,7 +159,7 @@
     	                	eaf.saveClass2(data, function (result) {
     	                		//更新页面数据
     	                        var ifmtree = parent.frames["ifm8A0553ADAE0DEFB9299263A63E463655"];
-    	                        eaf.getIframWin(ifmtree).eaftree.reload(objid);
+    	                        eaf.getIframWin(ifmtree).eaftree.reload(objId);
     	                        parent.updateTab({ title: $("#EAF_NAME").textbox('getValue') });
     	                	})
     	                }
@@ -164,7 +172,7 @@
       	 	}
             //更新页面数据
             var ifmtree = parent.frames["ifm8A0553ADAE0DEFB9299263A63E463655"];
-            eaf.getIframWin(ifmtree).eaftree.reload(objid);
+            eaf.getIframWin(ifmtree).eaftree.reload(objId);
             parent.updateTab({ title: $("#EAF_NAME").textbox('getValue') });
         });       
     }
@@ -174,12 +182,12 @@
     };
     //打开“界面”
     function uie_frm_clsui()
-    {        //http://localhost:8083/main/UserInterface/datagrid.jsp?clsid=01CA6C0A56BD451DA50806E617C5E347&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&id=14C2CBACE5F54D9E7AFC9320C16AD82F
-        window.open(eaf.getEafAppPath() + '/main/DataModel/ClsUI.jsp?clsid=01CA6C0A56BD451DA50806E617C5E347&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&id=' + objid);
+    {
+        window.open(eaf.getEafAppPath() + '/main/DataModel/ClsUI.jsp?clsid=01CA6C0A56BD451DA50806E617C5E347&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&id=' + objId);
     }
     //打开“操作”
-    function uie_frm_clsoper() {        //http://localhost:8083/main/UserInterface/datagrid.jsp?clsid=01CA6C0A56BD451DA50806E617C5E347&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&id=14C2CBACE5F54D9E7AFC9320C16AD82F
-        window.open(eaf.getEafAppPath() + '/main/DataModel/ClsOper.jsp?clsid=F2634390A9D3C5316C1676783C0C0D43&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&fromclsid=' + objid);
+    function uie_frm_clsoper() {
+        window.open(eaf.getEafAppPath() + '/main/DataModel/ClsOper.jsp?clsid=F2634390A9D3C5316C1676783C0C0D43&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&fromclsid=' + objId);
     }
 </script>
 <%@ include file='/main/footer.jsp' %>

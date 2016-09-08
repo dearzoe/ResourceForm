@@ -145,7 +145,6 @@
         resFormObj.EAF_ID = resId;
         resFormObj.EAF_RELATECLSID = $('#EAF_RELATECLSID').combotree('getValue');
         if (resFormObj.EAF_RELATECLSID) {
-            //resFormObj.EAF_RESOURCEID=$('#dgd_Attrs').datagrid('getChecked')[0].EAF_RESOURCEID;
             resFormObj.EAF_RELATEATTRID = $('#EAF_RELATEATTRID').combotree('getValue');
             resFormObj.EAF_FILTER = eaf.escapejsonstr($('#EAF_FILTER').val());
             resFormObj.EAF_RELATEVALUE = $('#EAF_RELATEVALUE').val();
