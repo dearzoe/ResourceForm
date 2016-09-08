@@ -24,11 +24,9 @@
     var uiid = eaf.getUrlParam('uiid');
     // 对象ID
     var objid = eaf.getUrlParam('objid');
-
     var divform = $('#uie_div_form');
     var eafform;
     $(function () {
-    	   
         var param = {};
         param.groups = ctl.getAttrGroupByCls(clsid); //获取属性组
         param.attrs = ctl.getAttrExByCls(clsid); //获取属性
@@ -108,17 +106,17 @@
     }
     //保存表单数据
     function uie_frm_save() {
-    debugger;//1
-        eaf.saveObjects(resClsId , updateObjects , insertObjects , deleteObjects);
-        updateObjects=[];
-        deleteObjects=[];
+       eaf.saveObjects(resClsId , insertObjects ,  updateObjects , eaf.jsonToStr(deleteObjects));
+       insertObjects=[];
+       updateObjects=[];
+       deleteObjects=[];
 		top.overrideAttrs=window.frames["uie_ifm_rel"].getSaveJson(); 
 		// 是否存在被覆盖的属性
     	var isExistAttrOverride=eaf.readData('DataModel', 'IsExistAttrOverride',{'clsId':objid});     	
 		if(isExistAttrOverride.isExistAttrOverride=="1"&&(eaf.strToJson(top.overrideAttrs.updateObjects).length>0)){		
        		//选择要传递的属性窗口
    	    	ctl.openDialog("main/DataModel/AttrSynchronize.jsp", "属性传递", true,function(v){
-   	    		var cacheData=window.frames["uie_ifm_rel"].dataCache;
+   	    		var cacheData=window.frames["uie_ifm_rel"].dataCache
    	    		// 过滤未修改的元属性
    	    		eaf.getChangeAttrs(cacheData,v,'EAF_ID',['EAF_ID','EAF_CLASSID','EAF_PATTRID','EAF_CNAME','IsOverride']);
    	    		uie_frm_save2(eaf.jsonToStr(v))
@@ -183,6 +181,5 @@
     function uie_frm_clsoper() {        //http://localhost:8083/main/UserInterface/datagrid.jsp?clsid=01CA6C0A56BD451DA50806E617C5E347&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&id=14C2CBACE5F54D9E7AFC9320C16AD82F
         window.open(eaf.getEafAppPath() + '/main/DataModel/ClsOper.jsp?clsid=F2634390A9D3C5316C1676783C0C0D43&uiid=B77C8CD23AE4EF5DBBD243579F82C9A9&fromclsid=' + objid);
     }
-   
 </script>
 <%@ include file='/main/footer.jsp' %>

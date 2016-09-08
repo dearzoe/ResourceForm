@@ -27,3 +27,7 @@ var data={
 
 }
 eaf.saveData('ObjectService', 'SaveObjects', data, '');
+
+
+/*save*/
+//$('#uie_dgd_objectlist').datagrid('getSelected').EAF_RESOURCEID;
